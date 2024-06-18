@@ -11,6 +11,8 @@ import axios from 'axios'
 import { getCategorias } from '../../Components/Hooks/getCategorias';
 import { User } from './user';
 import { Carrito } from './carrito';
+import { Menumovil } from './menumovil';
+import { BuscadorMovil } from './buscadormovil';
 
 export const Navbar = () => {
 
@@ -152,11 +154,14 @@ export const Navbar = () => {
         <div>
         <div className='fixed top-0 w-full z-50'>
             <div className='flex justify-between flex-row items-center px-6 py-3 bg-black'>
-                <div  className="overflow-hidden max-h-[50px] flex items-center w-[10%] cursor-pointer" onClick={() => goTo('/')}>
-                    <img src={logo} className=' h-[100px]'></img>
+                <div className='hidden mq980:block'>
+                    <Menumovil></Menumovil>
+                </div>
+                <div  className="overflow-hidden max-h-[50px] flex items-center w-[10%] cursor-pointer mq980:w-auto" onClick={() => goTo('/')}>
+                    <img src={logo} className=' h-[100px] mq980:h-[75px] mq980:w-full'></img>
                 </div>
                 <div className='flex flex-row justify-around py-3 text-white w-[50%] italic'>
-                <Link to="/" className="">INICIO</Link>
+                <Link to="/" className="mq980:hidden">INICIO</Link>
 
                 <div 
                     ref={productContainerRef}
@@ -168,18 +173,17 @@ export const Navbar = () => {
                 onClick={() => {
                     setShowProducts(false);
                     dispatch(setQuery(""));
-                    // Reiniciar solo si los filtros están activos
                     if (categoriasSelected.length || subcategoriasSelected.length) {
                         dispatch(setCategoriasSelected([]));
                         dispatch(setSubcategoriasSelected([]));
                     }
                 }} 
-                className={showProducts ? 'border-b-2 border-rojo' : ''}
+                className={showProducts ? 'border-b-2 border-rojo mq980:hidden' : 'mq980:hidden'}
             >
                 PRODUCTOS
             </Link>
                 {showProducts && (
-                    <div className="z-10 absolute bg-white mt-6 py-6 w-full left-0 shadow-md flex justify-center"
+                    <div className="z-10 absolute bg-white mt-6 py-6 w-full left-0 shadow-md flex justify-center mq980:hidden"
                         onMouseEnter={handleCategoryMouseEnter(productTimeoutRef)}
                         onMouseLeave={handleCategoryMouseLeave(setShowProducts, productTimeoutRef)}>
                         {categorias.map((categoria) => (
@@ -201,10 +205,13 @@ export const Navbar = () => {
 
                 </div>
                 
-                <Link to="/preguntasfrecuentes" >PREGUNTAS FRECUENTES</Link>
-                <Link to="/contacto">CONTACTANOS</Link>
+                <Link to="/preguntasfrecuentes" className='mq980:hidden'>PREGUNTAS FRECUENTES</Link>
+                <Link to="/contacto" className='mq980:hidden'>CONTACTANOS</Link>
             </div>
-                <div className='flex justify-center w-[20%]'>
+                <div className='hidden mq980:block w-auto '>
+                    <BuscadorMovil searchText={searchText} setSearchText={setSearchText} handleSearchClick={handleSearchClick} handleClearClick={handleClearClick} />
+                </div>
+                <div className='flex justify-center w-[20%] mq980:hidden'>
                     <label className=' border border-white rounded-[10px] py-2 px-4 w-[300px] flex flex-row justify-between bg-black'>
                         <input className=' focus:outline-none bg-black text-white border-bottom border-white'
                                  value={searchText}
@@ -212,27 +219,26 @@ export const Navbar = () => {
                                  onKeyPress={(e) => e.key === 'Enter' && handleSearchClick()}
                         ></input>
                         <div className="flex items-center">
-                        {searchText && (
-                            <button className='focus:outline-none' onClick={handleClearClick}>
-                                <IoCloseOutline className='text-[25px] text-white' />
-                            </button>
-                        )}
-                            <button className='focus:outline-none' onClick={handleSearchClick}>
-                                <IoSearchOutline className='text-[25px] text-white' />
-                            </button>
-                </div>
+                            {searchText && (
+                                <button className='focus:outline-none' onClick={handleClearClick}>
+                                    <IoCloseOutline className='text-[25px] text-white' />
+                                </button>
+                            )}
+                                <button className='focus:outline-none' onClick={handleSearchClick}>
+                                    <IoSearchOutline className='text-[25px] text-white' />
+                                </button>
+                        </div>
                     </label>
                 </div>
-                <div className='justify-center w-[10%] flex flex-row'>
+                <div className='justify-center w-[10%] flex flex-row mq980:w-auto'>
                     <HiOutlineUser className='text-[30px] text-white mr-6 cursor-pointer' onClick={handleAccountClick}/>
-                    {/* <HiOutlineShoppingCart className='text-[30px] text-white cursor-pointer' onClick={() => goTo('/shoppingCart')} /> */}
                     <Carrito></Carrito>
                 </div>
                 { account && (
                     <User setAccount={setAccount}></User>
                 )}
             </div>
-            <div className='absolute right-[125px] shadow-md rounded-md'>
+            <div className='absolute right-[125px] shadow-md rounded-md mq980:hidden'>
                      {filteredProducts.map((producto) => {
                         const descuento = calcularDescuento(parseFloat(producto.precioventa), parseFloat(producto.preciopromo));
                         return (

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import boxicons from 'boxicons'
 import { AñadirAlCarrito } from './añadirAlCarrito';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 
 export const Detail = () => {
     const { id } = useParams(); // Obtener el ID del producto de los parámetros de la URL
@@ -37,6 +38,25 @@ export const Detail = () => {
 
     
     const descuento = producto ? calcularDescuento(producto.precioventa, producto.preciopromo) : null;
+
+    const [images, setImages] = useState([]);
+    const [visibleIndex, setVisibleIndex] = useState(0);
+    const [mainImageIndex, setMainImageIndex] = useState(0);
+
+    useEffect(() => {
+        if (producto && producto.imagen) {
+            setImages(producto.imagen.split(','));
+        }
+    }, [producto]);
+
+    const mainImage = images.length > 0 ? images[0] : '';
+    const visibleImages = images.slice(visibleIndex, visibleIndex + 4);
+
+    const handleImageClick = (index) => {
+        setMainImageIndex(index);
+    };
+
+
    
     return (
         <div className="mt-[74px] bg-white">
@@ -45,16 +65,69 @@ export const Detail = () => {
                     <box-icon name='loader-circle' animation='spin' color='#C41111' size="70px"></box-icon>
                 </div>
             ) : producto ? (
-                <div className='flex flex-row'>
-                    <div>
-                        <img 
-                            src={`https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}`} 
-                            alt={producto.name} 
-                            className="w-[400px] h-[400px] object-cover my-14 mx-20 shadow-md" 
+                <div className='flex flex-row mq980:flex-col mq980:justify-center'>
+                    {images.length === 1 && (
+                        <div>
+                        <img
+                            src={mainImage ? `https://back.paravosdistribuidora.com.ar/${mainImage}` : ""}
+                            alt={producto.name}
+                            className="w-[400px] h-[400px] object-cover my-14 mx-20 shadow-md mq980:mx-0 mq980:my-4 mq980:w-[350px] mq980:h-[350px]"
                         />
                     </div>
-                    <div className='mt-14 ml-20'>
-                        <h1 className="font-bold text-4xl">{producto.name}</h1>
+                    )}
+
+
+{images.length > 2 && ( 
+                        <div>
+                        <div className='mq980:hidden flex flex-row'>
+                            <div className="flex flex-col items-center my-14 mr-4 ml-20 h-[400px] justify-between">
+                                {visibleImages.map((image, index) => (
+                                    <img
+                                        key={index + visibleIndex}
+                                        src={`https://back.paravosdistribuidora.com.ar/${image}`}
+                                        alt={`Producto ${index + visibleIndex}`}
+                                        className="w-[90px] h-[90px] object-cover shadow-md cursor-pointer"
+                                        onClick={() => handleImageClick(index + visibleIndex)}
+                                    />
+                                ))}
+                            
+                            </div>
+                            <div>
+                                <img
+                                    src={images[mainImageIndex] ? `https://back.paravosdistribuidora.com.ar/${images[mainImageIndex]}` : ""}
+                                    alt={producto.name}
+                                    className="w-[400px] h-[400px] object-cover my-14 mr-20 shadow-md"
+                                />
+                            </div>
+                        </div>
+                        <div className='hidden mq980:block flex-col'>
+                            <div>
+                                <img
+                                    src={images[mainImageIndex] ? `https://back.paravosdistribuidora.com.ar/${images[mainImageIndex]}` : ""}
+                                    alt={producto.name}
+                                    className="w-[400px] h-[400px] object-cover my-2 shadow-md"
+                                />
+                            </div>
+                            <div className="flex flex-row items-center justify-between">
+                                
+                                {visibleImages.map((image, index) => (
+                                    <img
+                                        key={index + visibleIndex}
+                                        src={`https://back.paravosdistribuidora.com.ar/${image}`}
+                                        alt={`Producto ${index + visibleIndex}`}
+                                        className="w-[90px] h-[90px] object-cover shadow-md cursor-pointer"
+                                        onClick={() => handleImageClick(index + visibleIndex)}
+                                    />
+                                ))}
+                            
+                            </div>
+                           
+                        </div>
+                        </div>
+                    )}
+
+                    <div className='mt-14 ml-20 mq980:mt-0 mq980:ml-0 mq980:p-4'>
+                        <h1 className="font-bold text-4xl mq980:text-2xl">{producto.name}</h1>
                         
                         {!isNaN(producto.preciopromo) && producto.preciopromo !== null ? (
                             <div className="text-2xl">

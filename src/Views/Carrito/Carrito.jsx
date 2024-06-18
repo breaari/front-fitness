@@ -12,7 +12,7 @@ export const Carrito = () => {
     const [carrito, setCarrito] = useState(null);
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row mq980:flex-col">
            <CarritoDeCompras carritoId = { carritoId } setCarrito = { setCarrito } carrito = {carrito} setProductos={setProductos} productos = {productos }></CarritoDeCompras> 
            <Subtotal carritoId = { carritoId } setCarrito = { setCarrito } carrito = {carrito} setProductos={setProductos} productos = {productos }></Subtotal>
         </div>

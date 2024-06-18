@@ -5,7 +5,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 
 export const Contacto = () => {
     return (
-        <div className="mt-24 mb-8 flex flex-col justify-center">
+        <div className="flex flex-col justify-center min-h-screen">
             <h1 className=" font-bold italic text-3xl flex justify-center mb-3 mt-2">CONTACTO</h1>
                 <div className="flex flex-row items-center justify-center my-2">
                     <FiClock className="text-[20px] mb-[2px] mr-2"/>

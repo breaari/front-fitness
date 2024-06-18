@@ -6,6 +6,7 @@ import { Cards } from "../../Components/Cards/Cards";
 import { useSelector, useDispatch } from "react-redux";
 import { setProductos } from "../../Redux/Slice/Slice";
 import axios from 'axios';
+import { FiltrosMovil } from "../../Components/Filtros/filtrosMovil";
 
 export const Productos = () => {
 
@@ -15,41 +16,6 @@ export const Productos = () => {
   const subcategoriasSelected = useSelector((state) => state.fitness.subcategoriasSelected);
   const query = useSelector((state) => state.fitness.query);
 
-
-//   useEffect(() => {
-//       const fetchProductos = async () => {
-//           const queryParams = new URLSearchParams();
-  
-//           if (query.trim() !== "") {
-//               queryParams.append('q', query);
-//           }
-  
-//           // Verificar si categoriasSelected no es un array y convertirlo en un array con un solo elemento si es una cadena de texto
-//           let selectedIds = Array.isArray(categoriasSelected) ? categoriasSelected : [categoriasSelected];
-//           if (selectedIds.length > 0 && selectedIds[0] !== "") {
-//               selectedIds.forEach(id => queryParams.append('categoriaId', id));
-//           }
-  
-//           if (subcategoriasSelected.length > 0) {
-//               subcategoriasSelected.forEach(id => queryParams.append('subcategoriaId', id));
-//           }
-  
-//           const url = queryParams.toString()
-//               ? `/productos/search?${queryParams.toString()}`
-//               : `/productos`;
-  
-//           const response = await axios.get(url);
-//           const data = await response.json();
-  
-//           if (data.success) {
-//               dispatch(setProductos(data.productos));
-//           } else {
-//               dispatch(setProductos([]));
-//           }
-//       };
-  
-//       fetchProductos();
-//   }, [categoriasSelected, subcategoriasSelected, query, dispatch]);
 
 useEffect(() => {
     const fetchProductos = async () => {
@@ -96,12 +62,21 @@ useEffect(() => {
     return (
         <div className="flex flex-col">
             <Carrusel />
-            <div className="flex flex-row">
-                <Filtros />
+            <div className="mq980:hidden flex flex-row min-h-screen">
+                <Filtros/>
                 <div className="flex flex-col w-full">
                     <Ordenar />
                     <Cards />
                 </div>
+            </div>
+            <div className="hidden mq980:block">
+                <div className="flex flex-row items-center">
+                <FiltrosMovil/>
+                <Ordenar />
+                </div>
+            </div>
+            <div className="hidden mq980:block">
+            <Cards />
             </div>
         </div>
     );

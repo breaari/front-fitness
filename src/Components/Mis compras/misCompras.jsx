@@ -58,7 +58,7 @@ export const MisCompras = () => {
     }
 
     return (
-        <div className="mt-[74px] p-4">
+        <div className="mt-[74px] p-4 min-h-screen">
             <div className="flex flex-row items-center p-4">
                 <TbShoppingBagCheck className='text-[38px]'/>
                 <h1 className='italic font-bold text-2xl mt-2'>MIS COMPRAS</h1>
@@ -79,13 +79,13 @@ export const MisCompras = () => {
                                 <p className="w-[25%]">{pedido.estado}</p>
                                 <p className="w-[25%]">Link de seguimiento</p>
                                 <p className="w-[25%]">Acciones</p>
-                                {/* Puedes añadir más detalles del pedido aquí */}
+                                
                             </div>
                         );
                     })}
                 </div>
             ) : (
-                <p>No tienes compras aún.</p>
+                <p className="p-6">No tienes compras aún.</p>
             )}
         </div>
     );

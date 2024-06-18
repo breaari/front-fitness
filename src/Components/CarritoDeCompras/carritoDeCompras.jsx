@@ -139,7 +139,7 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
     };
 
     return (
-        <div className='mt-[74px] w-[60%] p-4 min-h-[515px]'>
+        <div className='mt-[74px] w-[60%] p-4 min-h-[515px] mq980:min-h-[20px] mq980:w-full'>
             <div className='flex flex-row items-center p-4'>
                 <TbShoppingCartBolt className="text-[38px]" />
                 <h1 className='italic font-bold text-2xl'>CARRITO DE COMPRAS</h1>
@@ -152,15 +152,16 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
   
                     return (
                         <div key={index} className="flex flex-row items-center border border-sm w-full my-1 shadow-md">
-                            <div className='w-[15%]'>
+                            <div className='w-[15%] mq980:w-[25%]'>
                                 <img 
                                     src={`https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}`} 
                                     alt={producto.name} 
                                     className="w-20 h-20 m-2 object-cover shadow-md" 
                                 />
                             </div>
-                            <div className='flex flex-col w-[85%] px-2'>
-                                <div className='w-[35%]'>
+                            <div className='flex flex-col w-[85%] px-2 mq980:w-[75%]'>
+                                
+                                <div className='w-[35%] mq980:w-full'>
                                     <h2 className="text-xl font-semibold">{producto.name}</h2>
                                 </div>
                                 <div className="flex items-center">
@@ -175,6 +176,7 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
                                     ) : (
                                         <p className="font-semibold w-[35%]">${producto.precioventa}</p>
                                     )}
+                                
                                     <div className="flex items-center w-[35%]">
                                         {producto.cantidad === 1 || producto.cantidad === 0 || !producto.cantidad ? (
                                             <div className='flex bg-rojo w-[30px] h-[30px] items-center justify-center cursor-pointer rounded-tl-sm rounded-bl-sm'>

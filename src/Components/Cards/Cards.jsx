@@ -9,7 +9,7 @@ export const Cards = () => {
             { !productos.length && (
                 <div className="text-gris mt-10">No se encontraron productos para la búsqueda especificada.</div>
             )}
-            <div className="flex flex-wrap gap-5">
+            <div className="flex flex-wrap gap-5 mq980:gap-1 mq980:justify-center">
             {productos.map((producto) => (
                 <Card key={producto.id} producto={producto} />
             ))}

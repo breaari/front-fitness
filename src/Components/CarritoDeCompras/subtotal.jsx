@@ -222,7 +222,7 @@ const handleButtonClick = () => {
 
     return (
 
-    <div className={`mt-[74px] w-[40%] ${!productos.length ? 'text-gray-200' : ''}`}>
+    <div className={`mt-[74px] w-[40%] mq980:w-full mq980:mt-0 mq980:mb-6 ${!productos.length ? 'text-gray-200' : ''}`}>
     <div className={`mx-6 pt-4 pb-8 px-12 border ${!productos.length ? 'border-gray-200' : 'border-gray-200 shadow-md'} mt-10`}>
       <h1 className="italic text-xl font-bold p-4 text-center">RESUMEN DE COMPRA</h1>
       <div className="flex flex-col">

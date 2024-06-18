@@ -58,7 +58,7 @@ export const Filtros = () => {
       };
     
     return (
-        <div className="w-[250px] p-6 text-gris">
+        <div className="w-[250px] p-6 text-gris mq980:hidden">
             <div className="flex flex-row justify-between items-center">
             <h1 className="font-semibold italic mb-2">FILTROS</h1>
             <p className="text-sm text-rojo hover:underline mb-2 cursor-pointer" onClick={handleResetFilter}>Limpiar filtros</p>
