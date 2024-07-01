@@ -141,7 +141,7 @@ export const Register = () => {
 
     return (
         <div className="flex justify-center">
-        <form className="mt-36 mb-16 flex flex-col justify-center w-[400px]" onSubmit={handleSubmit}>
+        <form className="flex flex-col justify-center w-[400px] min-h-screen" onSubmit={handleSubmit}>
         {loading ? ( 
           <div className='flex justify-center items-center h-[350px]'>
              <box-icon name='loader-circle' animation='spin' color='#C41111' size="70px"></box-icon>
