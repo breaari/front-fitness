@@ -56,10 +56,9 @@ export const Detail = () => {
         setMainImageIndex(index);
     };
 
-
    
     return (
-        <div className="mt-[74px] bg-white">
+        <div className="mt-[74px] bg-white min-h-screen">
             {loading ? (
                 <div className='flex justify-center items-center h-[350px]'>
                     <box-icon name='loader-circle' animation='spin' color='#C41111' size="70px"></box-icon>
@@ -71,7 +70,7 @@ export const Detail = () => {
                         <img
                             src={mainImage ? `https://back.paravosdistribuidora.com.ar/${mainImage}` : ""}
                             alt={producto.name}
-                            className="w-[400px] h-[400px] object-cover my-14 mx-20 shadow-md mq980:mx-0 mq980:my-4 mq980:w-[350px] mq980:h-[350px]"
+                            className="w-[400px] h-[400px] object-cover my-14 mx-20 rounded-md mq980:mx-0 mq980:my-4 mq980:w-[350px] mq980:h-[350px]"
                         />
                     </div>
                     )}
@@ -86,7 +85,7 @@ export const Detail = () => {
                                         key={index + visibleIndex}
                                         src={`https://back.paravosdistribuidora.com.ar/${image}`}
                                         alt={`Producto ${index + visibleIndex}`}
-                                        className="w-[90px] h-[90px] object-cover shadow-md cursor-pointer"
+                                        className="w-[90px] h-[90px] object-cover rounded-md cursor-pointer"
                                         onClick={() => handleImageClick(index + visibleIndex)}
                                     />
                                 ))}
@@ -96,7 +95,7 @@ export const Detail = () => {
                                 <img
                                     src={images[mainImageIndex] ? `https://back.paravosdistribuidora.com.ar/${images[mainImageIndex]}` : ""}
                                     alt={producto.name}
-                                    className="w-[400px] h-[400px] object-cover my-14 mr-20 shadow-md"
+                                    className="w-[400px] h-[400px] object-cover my-14 mr-20 rounded-md"
                                 />
                             </div>
                         </div>
@@ -105,7 +104,7 @@ export const Detail = () => {
                                 <img
                                     src={images[mainImageIndex] ? `https://back.paravosdistribuidora.com.ar/${images[mainImageIndex]}` : ""}
                                     alt={producto.name}
-                                    className="w-[400px] h-[400px] object-cover my-2 shadow-md"
+                                    className="w-[400px] h-[400px] object-cover my-2 rounded-md"
                                 />
                             </div>
                             <div className="flex flex-row items-center justify-between">
@@ -115,7 +114,7 @@ export const Detail = () => {
                                         key={index + visibleIndex}
                                         src={`https://back.paravosdistribuidora.com.ar/${image}`}
                                         alt={`Producto ${index + visibleIndex}`}
-                                        className="w-[90px] h-[90px] object-cover shadow-md cursor-pointer"
+                                        className="w-[90px] h-[90px] object-cover cursor-pointer rounded-md"
                                         onClick={() => handleImageClick(index + visibleIndex)}
                                     />
                                 ))}
@@ -142,12 +141,12 @@ export const Detail = () => {
                         )}
     
                         {producto.descripcion && (
-                            <p className='mt-4 text-xl'>{producto.descripcion}</p>
+                            <p className='mt-4 text-xl'>{producto.descripcion !=="null" ? producto.descripcion : ""}</p>
                         )}
     
-                        {producto.variantes ? (
+                        { producto.variantes && producto.variantes !== "null" ? (
                             <div className="mt-4 flex flex-row">
-                                {JSON.parse(producto.variantes).map((variante, index) => (
+                                { JSON.parse(producto.variantes).map((variante, index) => (
                                     <button 
                                         key={index} // Asegúrate de agregar una clave única para cada elemento mapeado
                                         className="mr-2 mb-2 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"

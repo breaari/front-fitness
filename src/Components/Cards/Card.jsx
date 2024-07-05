@@ -33,13 +33,13 @@ export const Card = ({producto}) => {
     
     return (
         <Link to={`/productos/${producto.id}`}>
-        <div className="bg-gray-100 w-[225px] h-[315px] mq980:w-[175px] mq980:h-auto text-start transform transition-transform hover:scale-105">
+        <div className=" w-[225px] h-[315px] mq980:w-[175px] mq980:h-auto text-start transform transition-transform hover:scale-105">
         <img 
             src={producto.imagen ? `https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}` :  ""} 
             alt={producto.name} 
             className="w-[225px] h-[225px] object-cover mq980:w-[175px] mq980:h-[175px]"
         />
-        <p className="font-semibold">{producto.name}</p>
+        <p className="font-semibold mt-2">{producto.name}</p>
         <p className="text-gray-500 text-sm">{categoria} - {subcategoria}</p>
         {!isNaN(producto.preciopromo) && producto.preciopromo !== null ? (
             <div>

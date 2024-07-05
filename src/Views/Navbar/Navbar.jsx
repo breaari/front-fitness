@@ -73,12 +73,18 @@ export const Navbar = () => {
     const productos = useSelector((state) => state.fitness.productos);
     const [searchText, setSearchText] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
-
+    const [search, setSearch] = useState(false)
+    console.log("search:", search)
     const dispatch = useDispatch();
     
     const handleSearchClick = () => {
+        setFilteredProducts([])
+        
+       
         dispatch(setQuery(searchText)); // Actualiza el estado global de query
         navigate(`/productos`); // Navega a la página de productos
+        setSearchText('');
+        setSearch(false)
     };
 
     const handleClearClick = () => {
@@ -86,6 +92,7 @@ export const Navbar = () => {
         dispatch(setQuery('')); // Actualiza el estado global de query a vacío
         setFilteredProducts([]);
         navigate(`/productos`); // Navega a la página de productos
+        setSearch(false);
     };
 
     useEffect(() => {
@@ -128,6 +135,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         if (searchText) {
+            setSearch(true)
             const filtered = productos.filter(producto =>
                 producto.name.toLowerCase().includes(searchText.toLowerCase())
             );
@@ -140,6 +148,7 @@ export const Navbar = () => {
     const handleClickProduct = (id) => {
         navigate(`/productos/${id}`)
         setFilteredProducts([]);
+        setSearch(false);
     }
 
     const calcularDescuento = (precioventa, preciopromo) => {
@@ -238,13 +247,13 @@ export const Navbar = () => {
                     <User setAccount={setAccount}></User>
                 )}
             </div>
-            <div className='absolute right-[125px] shadow-md rounded-md mq980:hidden'>
-                     {filteredProducts.map((producto) => {
+            {/* <div className='absolute right-[125px] shadow-md rounded-md mq980:hidden'>
+                     {search && filteredProducts.map((producto) => {
                         const descuento = calcularDescuento(parseFloat(producto.precioventa), parseFloat(producto.preciopromo));
                         return (
                             
                             <div key={producto.id} className='right-0 border-b border-gray-200 p-2 cursor-pointer bg-white w-[360px] hover:bg-gray-100 flex' onClick={() => handleClickProduct(producto.id)}>
-                                <img src={`https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}`} alt={producto.name} className='w-12 h-12 object-cover mr-4' />
+                                <img src={ producto.imagen ? `https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}` : "" } alt={producto.name} className='w-12 h-12 object-cover mr-4' />
                                 <div>
                                     <div className='text-sm'>{producto.name}</div>
                                     {!isNaN(producto.preciopromo) && producto.preciopromo !== null ? (
@@ -264,7 +273,42 @@ export const Navbar = () => {
                         );
 
                     })}
+                    </div> */}
+                    {search && filteredProducts.length > 0 && (
+    <div className='absolute right-[125px] shadow-md rounded-md mq980:hidden'>
+        {filteredProducts.map((producto) => {
+            const descuento = calcularDescuento(parseFloat(producto.precioventa), parseFloat(producto.preciopromo));
+            return (
+                <div 
+                    key={producto.id} 
+                    className='right-0 border-b border-gray-200 p-2 cursor-pointer bg-white w-[360px] hover:bg-gray-100 flex' 
+                    onClick={() => handleClickProduct(producto.id)}
+                >
+                    <img 
+                        src={ producto.imagen ? `https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}` : "" } 
+                        alt={producto.name} 
+                        className='w-12 h-12 object-cover mr-4' 
+                    />
+                    <div>
+                        <div className='text-sm'>{producto.name}</div>
+                        {!isNaN(producto.preciopromo) && producto.preciopromo !== null ? (
+                            <div className='flex flex-row items-center'>
+                                <div className="flex flex-row">
+                                    <p className="text-gris line-through text-sm">${producto.precioventa}</p>
+                                    <p className="ml-1 font-semibold text-sm">${producto.preciopromo}</p>
+                                </div>
+                                <p className="text-green-700 text-sm ml-1">{descuento}% de descuento</p>
+                            </div>
+                        ) : (
+                            <p className="font-semibold text-sm">${producto.precioventa}</p>
+                        )}
                     </div>
+                </div>
+            );
+        })}
+    </div>
+)}
+
         </div>
         </div>
     )
