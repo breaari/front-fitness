@@ -76,10 +76,10 @@ export const Detail = () => {
                     )}
 
 
-{images.length > 2 && ( 
+{images.length > 1 && ( 
                         <div>
                         <div className='mq980:hidden flex flex-row'>
-                            <div className="flex flex-col items-center my-14 mr-4 ml-20 h-[400px] justify-between">
+                            <div className="flex flex-col items-center my-14 mr-4 ml-20 h-[400px] justify-start gap-2">
                                 {visibleImages.map((image, index) => (
                                     <img
                                         key={index + visibleIndex}
