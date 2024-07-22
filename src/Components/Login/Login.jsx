@@ -37,12 +37,10 @@ export const Login = () => {
         const [inputError, setInputError ] = useState(initialErrors);
     
         const handleChange = async (e) => {
-          console.log("acá se ejectura handle")
             const { name, value } = e.target;
         
               if (name === 'email') {
                 const { valid, error } = isValidEmail(value);
-                console.log("valid;", valid)
                 setInputError((prevInputError) => ({
                   ...prevInputError,
                   email: { valid, error }
@@ -64,7 +62,6 @@ export const Login = () => {
           };
 
     const [loading, setLoading] = useState(false)
-    console.log("inputError:", inputError)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -101,12 +98,12 @@ export const Login = () => {
           toast.error('Email y/o contraseña incorrectos, intente denuevo.', {
             toastId: 'error-toast', 
           });
+          setLoading(false)
         }
       };
 
       const navigate = useNavigate()
-    
-      // Función para navegar a una ruta específica
+
       const goTo = (path) => {
           navigate(path);
           setShowProducts(false)

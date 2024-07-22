@@ -59,9 +59,9 @@ export const Subtotal = ({carrito, productos, setProductos, setCarrito, carritoI
         setInput((prevInput) => ({
           ...prevInput,
           pedido: carrito.productos.map((productoEnCarrito) => {
-            console.log("Producto en carrito:", productoEnCarrito);
+
             const producto = productos.find(p => p.id.toString() === productoEnCarrito.productId.toString());
-            console.log("Producto encontrado:", producto);
+
             return {
               productId: productoEnCarrito.productId,
               cantidad: productoEnCarrito.cantidad,
@@ -76,7 +76,6 @@ export const Subtotal = ({carrito, productos, setProductos, setCarrito, carritoI
         console.log("Datos insuficientes para procesar el pedido");
       }
     }, [carrito, productos, subtotal]);
-    console.log("metodoenvio:", metodoEnvio)
     
     const userId = localStorage.getItem("usuario") ? JSON.parse(localStorage.getItem("usuario")).id : null;
 
@@ -123,7 +122,7 @@ const handleSubmit = async () => {
     console.error("Error:", error);
   }
 };
-
+const [pagarHabilitado, setPagarHabilitado] = useState(false)
 const [modalPago, setModalPago] = useState(false)
 const [preferenceId, setPreferenceId]= useState("")
 const toggleModalPago = () => {
@@ -132,8 +131,13 @@ const toggleModalPago = () => {
 
 const handleFinalizarCompra = async () => {
   if (!input.metodo_envio) {
-    alert("Seleccione un método de envío.");
-    return;
+    if (!toast.isActive('error-toast')) {
+      toast.error('Seleccione un método de envío por favor', {
+          toastId: 'error-toast',
+      });
+  }
+    return
+ 
   }
 
   if (input.metodo_envio === "envio gratis") {
@@ -142,6 +146,7 @@ const handleFinalizarCompra = async () => {
         toast.error('Faltan completar datos de envío', {
             toastId: 'error-toast',
         });
+      return
     }
       
     }
@@ -153,18 +158,22 @@ const handleFinalizarCompra = async () => {
             toastId: 'error-toast',
         });
       }}
+      return 
   }
 
-  handleSubmit();
+  setPagarHabilitado(true)
+
+ 
 
   try {
+    if (pagarHabilitado) {
+
+      handleSubmit(); 
     const response = await axios.post("/create_preference", {
       description: "Tu compra en Para Vos - Fitness",
       price: subtotal,
       quantity: 1
     });
-
-    console.log("Response from backend:", response.data);
 
     if (response.data.success) {
       setPreferenceId(response.data.id);
@@ -172,6 +181,9 @@ const handleFinalizarCompra = async () => {
     } else {
       console.error("Error al crear la preferencia de pago:", response.data.message);
     }
+  } else {
+    return
+  }
   } catch (error) {
     console.error("Error:", error);
   }
@@ -186,14 +198,13 @@ const togglePagoExitoso = () => {
   setPagoExitoso(!pagoExitoso);
 };
 
-// Extraer los parámetros de la URL
 const status = queryParams.get('status');
 const paymentId = queryParams.get('payment_id');
 const id_lastPedido = localStorage.getItem('lastPedidoId');
-console.log("last:",  localStorage.getItem('lastPedidoId'))
+
 useEffect(() => {
   async function handlePaymentApproval() {
-    // Verificar si el estado del pago es "approved"
+
     if (status === 'approved' && paymentId && id_lastPedido) {
       try {
         await axios.put("/carrito", { carritoId: carritoId, vaciarCarrito: true });

@@ -135,7 +135,10 @@ export const Register = () => {
         
           
         } catch (error) {
-          window.alert('Error al iniciar sesión')
+          toast.error('Ya existe un usuario vinculado al email ingresado, por favor iniciá sesión.', {
+            toastId: 'error-toast', 
+          });
+          setLoading(false)
         }
       };
 

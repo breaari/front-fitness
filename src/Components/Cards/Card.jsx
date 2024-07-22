@@ -26,18 +26,19 @@ export const Card = ({producto}) => {
             return null;
         }
         const descuento = ((precioventa - preciopromo) / precioventa) * 100;
-        return Math.round(descuento); // Redondea el porcentaje al entero más cercano
+        return Math.round(descuento); 
     };
     
     const descuento = calcularDescuento(producto.precioventa, producto.preciopromo);
     
     return (
         <Link to={`/productos/${producto.id}`}>
-        <div className=" w-[225px] h-[315px] mq980:w-[175px] mq980:h-auto text-start transform transition-transform hover:scale-105">
+        <div className="flex flex-col">
+        <div className=" w-[225px] h-auto flex-1 mq980:w-[140px] mq980:h-auto text-start transform transition-transform hover:scale-105">
         <img 
             src={producto.imagen ? `https://back.paravosdistribuidora.com.ar/${producto.imagen.split(',')[0]}` :  ""} 
             alt={producto.name} 
-            className="w-[225px] h-[225px] object-cover mq980:w-[175px] mq980:h-[175px]"
+            className="w-[225px] h-[225px] object-cover mq980:w-full mq980:h-auto"
         />
         <p className="font-semibold mt-2">{producto.name}</p>
         <p className="text-gray-500 text-sm">{categoria} - {subcategoria}</p>
@@ -52,6 +53,7 @@ export const Card = ({producto}) => {
         ) : (
             <p className="font-semibold">${producto.precioventa}</p>
         )}
+    </div>
     </div>
     </Link>
     )

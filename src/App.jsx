@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { Navbar } from './Views/Navbar/Navbar'
 import { Inicio } from './Views/Inicio/Inicio'
 import { Productos } from './Views/Productos/Productos'
@@ -11,8 +11,15 @@ import { Register } from './Components/Register/Register'
 import { Carrito } from './Views/Carrito/Carrito'
 import { Detail } from './Components/Detail/Detail'
 import { MisCompras } from './Components/Mis compras/misCompras'
+import { useEffect } from 'react'
 
 function App() {
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   
   return (
     <div>
