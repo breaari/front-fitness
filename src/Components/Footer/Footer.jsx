@@ -12,8 +12,16 @@ export const Footer = () => {
             <div className="flex flex-col justify-center text-white">
                 <h1 className="font-semibold italic">SIGAMOS CONECTADOS</h1>
                 <div className='flex flex-row justify-center mt-1'>
-                <FaFacebook className="text-[30px] mr-2" />
-                <FaInstagram className="text-[30px]"  />
+                <a href='https://www.facebook.com/profile.php?id=61562808723967&mibextid=ZbWKwL' 
+                    target='_blank' 
+                    rel='noopener noreferrer'>
+                    <FaFacebook className="text-[30px] mr-2" />
+                </a>
+                <a href='https://www.instagram.com/paravos.fitness/' 
+                    target='_blank' 
+                    rel='noopener noreferrer'>
+                    <FaInstagram className="text-[30px]" />
+                </a>
                 </div>
             </div>
         </div>
