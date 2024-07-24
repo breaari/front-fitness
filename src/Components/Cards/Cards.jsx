@@ -5,16 +5,18 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 
 export const Cards = () => {
-    const savedPage = localStorage.getItem('currentPage');
+    // const savedPage = localStorage.getItem('currentPage');
     const productos = useSelector((state) => state.fitness.productos);
 
-    const [currentPage, setCurrentPage] = useState(Number(savedPage) || 1);
+    const [currentPage, setCurrentPage] = useState(
+        // Number(savedPage) || 
+    1);
     const productsPerPage = 24;
     const pagesToShow = 4;
 
-    useEffect(() => {
-        localStorage.setItem('currentPage', currentPage);
-    }, [currentPage]);
+    // useEffect(() => {
+    //     localStorage.setItem('currentPage', currentPage);
+    // }, [currentPage]);
 
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -76,7 +78,7 @@ export const Cards = () => {
 
         return pageNumbers;
     };
-     console.log("priducto:", currentProducts)
+  
     return (
         <div className="flex flex-col items-center mb-10 mq980:mx-[5%]">
             {!productos.length && (
