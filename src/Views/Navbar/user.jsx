@@ -34,13 +34,13 @@ export const User = ({ setAccount }) => {
             {usuario ? (
                 <div className="flex flex-col">
                     <p className='text-black mb-2 flex justify-center'>Hola, {usuario.usuario}!</p>
-                    <div
+                    {/* <div
                         onClick={() => goTo('/miscompras')} 
                         className='flex-row items-center bg-black hover:bg-green-600 mb-2 cursor-pointer text-white px-16 py-2 text-[14px] flex justify-center rounded-[2px]'
                         >
                         <BsCartCheck className="mr-2 text-[20px]"/>
                         Mis compras
-                   </div>
+                   </div> */}
                    <div
                     onClick={handleLogout}
                     className='items-center flex flex-row bg-black hover:bg-rojo cursor-pointer text-white px-16 py-2 text-[14px] justify-center rounded-[2px]'

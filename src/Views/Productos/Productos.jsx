@@ -25,7 +25,7 @@ useEffect(() => {
             queryParams.append('q', query);
         }
 
-        // Verificar si categoriasSelected no es un array y convertirlo en un array con un solo elemento si es una cadena de texto
+        
         let selectedIds = Array.isArray(categoriasSelected) ? categoriasSelected : [categoriasSelected];
         if (selectedIds.length > 0 && selectedIds[0] !== "") {
             selectedIds.forEach(id => queryParams.append('categoriaId', id));

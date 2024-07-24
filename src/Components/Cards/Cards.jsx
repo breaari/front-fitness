@@ -18,7 +18,9 @@ export const Cards = () => {
 
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = productos.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalProductos = productos.length
+    // const currentProducts = productos.slice(indexOfFirstProduct, indexOfLastProduct);
+    const currentProducts = totalProductos > 24 ? productos.slice(indexOfFirstProduct, indexOfLastProduct) : productos;
 
     const totalPages = Math.ceil(productos.length / productsPerPage);
 
@@ -74,7 +76,7 @@ export const Cards = () => {
 
         return pageNumbers;
     };
-
+     console.log("priducto:", currentProducts)
     return (
         <div className="flex flex-col items-center mb-10 mq980:mx-[5%]">
             {!productos.length && (
@@ -82,10 +84,11 @@ export const Cards = () => {
             )}
             <div className="flex flex-wrap gap-5 mq980:gap-2 mq980:justify-center mq980:mx-[2.5%] ">
                 {currentProducts.map((producto) => (
+                    
                     <Card key={producto.id} producto={producto} />
                 ))}
             </div>
-            {/* Paginación */}
+       
             <div className="flex justify-center mt-5 space-x-2">
                 <button
                     onClick={handlePreviousPage}
