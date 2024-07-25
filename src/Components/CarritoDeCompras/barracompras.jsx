@@ -25,11 +25,11 @@ export const BarraCompras = ({ subtotal, productos }) => {
         <div className="mx-6 my-12">
             <div className="bg-gray-200 h-2 relative rounded-md">
                 <div
-                    className={`h-2 rounded-md relative ${!productos.length ? 'bg-gray-400' : 'bg-rojo'}`}
+                    className={`h-2 rounded-md relative ${!productos.length ? 'bg-gray-200' : 'bg-rojo'}`}
                     style={{ width: `${progressPercentage}%` }}
                 >
                     <div
-                        className={`w-4 h-4 rounded-full absolute ${!productos.length ? 'bg-gray-400' : 'bg-rojo'}`}
+                        className={`w-4 h-4 rounded-full absolute ${!productos.length ? 'bg-gray-200' : 'bg-rojo'}`}
                         style={{ 
                             right: '-8px', 
                             top: '-4px',
@@ -42,8 +42,8 @@ export const BarraCompras = ({ subtotal, productos }) => {
                 {message}
             </p>
             <div>
-                <Link to="/productos">
-                    <button className={`flex flex-row items-center hover:underline ${!productos.length ? 'text-gray-400' : 'text-rojo'}`}>
+                <Link to="/productos" >
+                    <button className={`flex flex-row items-center hover:underline ${!productos.length ? 'text-gray-200' : 'text-rojo'}`}>
                         Continuar compra
                         <IoIosArrowForward />
                     </button>
