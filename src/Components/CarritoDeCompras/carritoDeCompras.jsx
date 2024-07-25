@@ -214,9 +214,6 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
                     );
                 })
                 ) : (
-                    // <div className='flex justify-center items-center h-[350px]'>
-                    //     <box-icon name='loader-circle' animation='spin' color='#C41111' size="70px"></box-icon>
-                    // </div>
                     <div className='p-6 flex flex-col justify-center text-center items-center mt-10'>
                         <TbShoppingBagCheck className='text-8xl'/>
                        <p className='font-semibold text-xl my-4'>Empezá un carrito de compras!</p>

@@ -9,7 +9,7 @@ export const ModalPago = ({ toggleModalPago, idpedido}) => {
     const encodedMessage = encodeURIComponent(message);
     
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white py-8 px-8 rounded-sm shadow-md w-[700px]">
                 <div className="flex flex-row justify-end text-black"> 
                     <IoClose className="mb-6 cursor-pointer text-xl text-end" onClick={toggleModalPago} />

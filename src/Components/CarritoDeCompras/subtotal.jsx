@@ -327,7 +327,7 @@ export const Subtotal = ({ carrito, productos, setProductos, setCarrito, carrito
                 </div>
             </div>
             <div className="">
-                <BarraCompras subtotal={subtotal}></BarraCompras>
+                <BarraCompras subtotal={subtotal} productos={productos}></BarraCompras>
             </div>
             <ToastContainer
                 position="top-right"
