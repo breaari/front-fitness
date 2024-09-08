@@ -3,52 +3,117 @@ import axios from 'axios';
 import { TbShoppingCartBolt } from "react-icons/tb";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { TbShoppingBagCheck } from "react-icons/tb";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrito, carrito }) => {
+export const CarritoDeCompras = ({ userId, carritoId, setProductos, productos, setCarrito, carrito }) => {
+    const [isServerCarrito, setIsServerCarrito] = useState(false);
+
+    console.log("CCAAARRIITOOO", carrito)
+    // Helper function to safely parse JSON
+    const safeJSONParse = (value) => {
+        try {
+            return JSON.parse(value);
+        } catch (e) {
+            return null;
+        }
+    };
 
     const fetchCarritoActualizado = async () => {
-        try {
-            const response = await axios.get(`/carrito/${carritoId}`);
-            if (response.data.success) {
-                localStorage.setItem('carrito', JSON.stringify(response.data.carrito));
-            } else {
-                if (!toast.isActive('error-toast')) {
-                    toast.error('Error al obtener el carrito actualizado.', {
-                        toastId: 'error-toast',
-                    });
+        if (carritoId) {
+            try {
+                const response = await axios.get(`/carrito/${carritoId}`);
+                if (response.data.success) {
+                    localStorage.setItem('carrito', JSON.stringify(response.data.carrito));
+                    setCarrito(response.data.carrito);
+                } else {
+                    console.error('Error al obtener el carrito actualizado.');
                 }
-            }
-        } catch (error) {
-            if (!toast.isActive('error-toast')) {
-                toast.error('Error al obtener el carrito actualizado. Por favor, inténtelo de nuevo más tarde.', {
-                    toastId: 'error-toast',
-                });
+            } catch (error) {
+                console.error('Error al obtener el carrito actualizado:', error);
             }
         }
     };
-  
-    useEffect(() => {
-        const fetchCarrito = async (carritoId) => {
-            if (carritoId) {
-                const response = await axios.get(`/carrito/${carritoId}`);
-                setCarrito(response.data.carrito);
-                
-            }
-        };
 
-        fetchCarrito(carritoId);
+    const transferirCarritoLocalAUsuario = async () => {
+        if (carritoId) {
+            try {
+                const carritoLocal = safeJSONParse(localStorage.getItem('carritoLocal')) || { productos: [] };
+                
+                // Crear el input para la actualización del carrito del usuario
+                const input = {
+                    carritoId: carritoId,
+                    productos: carritoLocal.productos.map(producto => ({
+                        productId: producto.productId,
+                        cantidad: producto.cantidad,
+                    })),
+                };
+    
+                const response = await axios.put('/carrito', input, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (response.data.success) {
+                    // Limpiar el carrito local después de la transferencia
+                    localStorage.removeItem('carritoLocal');
+                    
+                    // Actualizar el estado del carrito en el servidor
+                    setCarrito(response.data.carrito);
+                    // Actualizar también el carrito en localStorage si es necesario
+                    localStorage.setItem('carrito', JSON.stringify(response.data.carrito));
+                } else {
+                    console.error('Error al transferir el carrito local al carrito del usuario.');
+                }
+            } catch (error) {
+                console.error('Error al transferir el carrito local al carrito del usuario:', error);
+            }
+        }
+    };
+    
+
+    useEffect(() => {
+        const carritoLocal = safeJSONParse(localStorage.getItem('carritoLocal')) || { productos: [] };
+
+        if (carritoId) {
+            // Cargar carrito del servidor si existe carritoId
+            setIsServerCarrito(true);
+            fetchCarritoActualizado();
+        } else {
+            // Cargar carrito local si no hay carritoId
+            setIsServerCarrito(false);
+            const storedCarrito = safeJSONParse(localStorage.getItem('carrito')) || { productos: [] };
+            setCarrito(storedCarrito);
+        }
+
+        // Verificar si hay un userId y si hay productos en el carrito local
+        const usuario = safeJSONParse(localStorage.getItem('user')) || {};
+        const userId = usuario.userId;
+
+        if (userId && carritoLocal.productos.length > 0) {
+            transferirCarritoLocalAUsuario(carritoLocal.productos);
+        }
     }, [carritoId]);
 
     useEffect(() => {
         const fetchProductos = async () => {
-            if (carrito && carrito.productos && carrito.productos.length > 0) {
-                const productosDetalles = await Promise.all(carrito.productos.map(async (item) => {
-                    const response = await axios.get(`/productos/${item.productId}`);
-                    return {
-                        ...item,
-                        ...response.data.producto,
-                    };
+            const carritoActual = isServerCarrito ? carrito : safeJSONParse(localStorage.getItem('carritoLocal')) || { productos: [] };
+            if (carritoActual && carritoActual.productos && carritoActual.productos.length > 0) {
+                const productosDetalles = await Promise.all(carritoActual.productos.map(async (item) => {
+                    try {
+                        const response = await axios.get(`/productos/${item.productId}`);
+                        return {
+                            ...item,
+                            ...response.data.producto,
+                        };
+                    } catch (error) {
+                        console.error('Error al obtener producto:', error);
+                        return {
+                            ...item,
+                            nombre: 'No encontrado',
+                            precio: 0,
+                        };
+                    }
                 }));
                 setProductos(productosDetalles);
             } else {
@@ -57,7 +122,7 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
         };
 
         fetchProductos();
-    }, [carrito]);
+    }, [carrito, isServerCarrito]);
 
     const calcularDescuento = (precioventa, preciopromo) => {
         if (isNaN(preciopromo) || preciopromo === null || preciopromo >= precioventa) {
@@ -71,74 +136,84 @@ export const CarritoDeCompras = ({ carritoId, setProductos, productos, setCarrit
         return (precio * cantidad).toFixed(2);
     };
 
-
     const actualizarCantidad = async (productId, nuevaCantidad) => {
-        console.log("nuevacatidad;", nuevaCantidad)
+        const carritoActual = isServerCarrito ? carrito : safeJSONParse(localStorage.getItem('carritoLocal')) || { productos: [] };
 
-        const updatedProductos = productos.map((producto) => 
+        const updatedProductos = productos.map((producto) =>
             producto.productId === productId ? { ...producto, cantidad: nuevaCantidad } : producto
         );
         setProductos(updatedProductos);
-        fetchCarritoActualizado();
 
         const input = {
-            carritoId: carrito.id,
+            carritoId: carritoActual.id,
             productId: productId,
             cantidad: nuevaCantidad,
             estado: "pendiente"
         };
 
-        console.log("input:", input)
-
         try {
-            const response = await axios.put('/carrito', input, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            if (isServerCarrito) {
+                const response = await axios.put('/carrito', input, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-            if (response.data.success) {
-                setCarrito(response.data.carrito);
+                if (response.data.success) {
+                    setCarrito(response.data.carrito);
+                }
+            } else {
+                localStorage.setItem('carritoLocal', JSON.stringify({
+                    ...carritoActual,
+                    productos: updatedProductos,
+                }));
             }
-    
         } catch (error) {
-            alert('Error al actualizar la cantidad. Por favor, inténtelo de nuevo más tarde.');
+            console.error('Error al actualizar la cantidad:', error);
         }
     };
 
     const handleInputCantidadChange = (e, productId) => {
         const nuevaCantidad = parseInt(e.target.value, 10);
-
-            actualizarCantidad(productId, nuevaCantidad);
-
+        actualizarCantidad(productId, nuevaCantidad);
     };
 
-
     const eliminarProducto = async (productId) => {
+        const carritoActual = isServerCarrito ? carrito : safeJSONParse(localStorage.getItem('carritoLocal')) || { productos: [] };
+
         const input = {
-            carritoId: carrito.id,
+            carritoId: carritoActual.id,
             productId: productId,
             cantidad: 0 // Establecer la cantidad en 0 para eliminar el producto del carrito
         };
 
         try {
-            const response = await axios.put('/carrito', input, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            if (isServerCarrito) {
+                const response = await axios.put('/carrito', input, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-            if (response.data.success) {
-                const updatedCarrito = await axios.get(`/carrito/${carrito.id}`);
-                setCarrito(updatedCarrito.data.carrito);
-                fetchCarritoActualizado();
+                if (response.data.success) {
+                    const updatedCarrito = await axios.get(`/carrito/${carritoActual.id}`);
+                    setCarrito(updatedCarrito.data.carrito);
+                    fetchCarritoActualizado();
+                }
+            } else {
+                const updatedProductos = productos.filter(producto => producto.productId !== productId);
+                setProductos(updatedProductos);
+                localStorage.setItem('carritoLocal', JSON.stringify({
+                    ...carritoActual,
+                    productos: updatedProductos,
+                }));
             }
         } catch (error) {
-            alert('Error al eliminar el producto. Por favor, inténtelo de nuevo más tarde.');
+            console.error('Error al eliminar el producto:', error);
         }
     };
 
-    return (
+       return (
         <div className='mt-[74px] w-[60%] p-4 min-h-[515px] mq980:min-h-[20px] mq980:w-full'>
             <div className='flex flex-row items-center p-4'>
                 <TbShoppingCartBolt className="text-[38px]" />
